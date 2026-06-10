@@ -99,18 +99,34 @@ def load_sheet_rows(ws: gspread.Worksheet) -> tuple:
     if not all_values:
         return [], []
     headers = all_values[0]
+
+    # 헤더 이름으로 열 위치 탐색 (열 순서가 바뀌어도 동작)
+    def find_col(name):
+        for idx, h in enumerate(headers):
+            if h.strip().upper() == name.upper():
+                return idx
+        raise ValueError(f"시트 1행에서 '{name}' 헤더를 찾을 수 없습니다. 헤더명을 확인해주세요.")
+
+    col_brand   = find_col("BRAND")
+    col_sku     = find_col("SKUNAME")
+    col_pid     = find_col("ProductID")
+    col_viid    = find_col("VIID")
+
     rows = []
     for i, row in enumerate(all_values[1:], start=2):
-        if len(row) < 4:
+        if len(row) <= max(col_brand, col_sku, col_pid, col_viid):
             continue
-        brand, sku_name, pid, viid = row[0], row[1], row[2], row[3]
-        if not pid.strip() or not viid.strip():
+        brand    = row[col_brand].strip()
+        sku_name = row[col_sku].strip()
+        pid      = row[col_pid].strip()
+        viid     = row[col_viid].strip()
+        if not pid or not viid:
             continue
         rows.append({
-            "brand":     brand.strip(),
-            "sku_name":  sku_name.strip(),
-            "pid":       pid.strip(),
-            "viid":      viid.strip(),
+            "brand":     brand,
+            "sku_name":  sku_name,
+            "pid":       pid,
+            "viid":      viid,
             "row_index": i,
         })
     return rows, headers
