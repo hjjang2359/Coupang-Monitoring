@@ -1,0 +1,25 @@
+# 보안 파일 (절대 커밋 금지)
+service_account.json
+config.json
+
+# 자동 생성 데이터
+viid_map.json
+이슈로그.csv
+
+# Chrome 프로필 (PC별 독립)
+chrome_profile/
+
+# 로그
+logs/
+
+# 디버그용 임시 파일
+page_raw_*.html
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Windows
+Thumbs.db
+desktop.ini
