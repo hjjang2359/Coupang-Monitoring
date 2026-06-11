@@ -354,6 +354,14 @@ def fetch_viid_item_id(driver: uc.Chrome, pid: str, viid: str, delay: int, logge
     return ""
 
 
+def _find_final_price_from_dom(html: str) -> int | None:
+    """HTML DOM의 final-price-amount 클래스에서 최종 할인가를 추출합니다."""
+    m = re.search(r'final-price-amount[^>]*>\s*([\d,]+)원', html)
+    if m:
+        return int(m.group(1).replace(",", ""))
+    return None
+
+
 def fetch_viid_price_info(driver: uc.Chrome, pid: str, viid: str, logger: logging.Logger) -> tuple[int | None, bool]:
     """위너 VIID 페이지에 직접 접속해 최종가와 할인 여부를 확인합니다.
     반환값: (price, is_discounted)"""
@@ -365,6 +373,9 @@ def fetch_viid_price_info(driver: uc.Chrome, pid: str, viid: str, logger: loggin
     price, is_discounted = _find_final_price_for_viid(next_f, viid)
     if price is None:
         price, is_discounted = _find_final_price_for_viid(html, viid)
+    if price is None:
+        price = _find_final_price_from_dom(html)
+        is_discounted = price is not None
     return price, is_discounted
 
 
