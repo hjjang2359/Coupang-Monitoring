@@ -1,5 +1,5 @@
 @echo off
-cd /d "%~dp0"
+pushd "%~dp0"
 echo 최신 코드를 받아오는 중...
 git pull
 if %errorlevel% == 0 (
