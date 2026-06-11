@@ -359,7 +359,7 @@ def fetch_viid_price_info(driver: uc.Chrome, pid: str, viid: str, logger: loggin
     반환값: (price, is_discounted)"""
     url = f"https://www.coupang.com/vp/products/{pid}?vendorItemId={viid}"
     driver.get(url)
-    time.sleep(3 + random.uniform(-1, 2))
+    time.sleep(random.uniform(3, 10))
     html = driver.page_source
     next_f = extract_next_f(html)
     price, is_discounted = _find_final_price_for_viid(next_f, viid)
@@ -375,7 +375,7 @@ def fetch_winner_seller(driver: uc.Chrome, pid: str, winner_viid: str, delay: in
     logger.info(f"  위너 VIID {winner_viid} 판매자 확인 중 (추가 요청)...")
     url = f"https://www.coupang.com/vp/products/{pid}?vendorItemId={winner_viid}"
     driver.get(url)
-    time.sleep(max(3, delay // 2) + random.uniform(0, 1))
+    time.sleep(random.uniform(3, 10))
     html = driver.page_source
     seller = parse_winner_seller(html)
     is_active = winner_viid in parse_winners(html)
@@ -392,7 +392,7 @@ def fetch_my_viid_status(driver: uc.Chrome, pid: str, my_viid: str, delay: int, 
     logger.info(f"  내 VIID {my_viid} 페이지 재확인 (비활성 위너 대체)...")
     url = f"https://www.coupang.com/vp/products/{pid}?vendorItemId={my_viid}"
     driver.get(url)
-    time.sleep(max(3, delay // 2) + random.uniform(0, 1))
+    time.sleep(random.uniform(3, 10))
     html = driver.page_source
 
     winner_map = parse_winners(html)
