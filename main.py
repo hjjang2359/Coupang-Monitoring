@@ -723,8 +723,9 @@ def main():
         logger.info(f"재실행 감지: {len(skip_pids)}개 PID 건너뜀 → {len(pid_groups)}개 PID 처리 예정")
 
     # Chrome 브라우저 1회 시작
-    # 전용 프로필: config에 chrome_profile_dir 없으면 프로젝트 폴더 안 chrome_profile 자동 사용
-    profile_dir = config.get("chrome_profile_dir", str(Path(__file__).parent / "chrome_profile"))
+    # chrome_profile은 항상 로컬 PC에 저장 (NAS 실행 시 네트워크 드라이브에 생기는 것 방지)
+    default_profile = str(Path.home() / "AppData" / "Local" / "CoupangMonitor" / "chrome_profile")
+    profile_dir = config.get("chrome_profile_dir") or default_profile
     driver = create_browser(logger, config.get("cookie_file", ""), profile_dir=profile_dir)
 
     results = []
